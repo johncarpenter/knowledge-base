@@ -1,0 +1,24 @@
+{
+  "name": "zoho-projects-mcp",
+  "version": "1.0.0",
+  "description": "Local MCP server for Zoho Projects time tracking with OAuth authentication",
+  "type": "module",
+  "bin": {
+    "zoho-projects-mcp": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js serve",
+    "auth": "node dist/cli.js auth"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.1",
+    "open": "^10.1.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.3"
+  }
+}
