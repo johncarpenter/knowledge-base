@@ -168,7 +168,8 @@ class ICalBuddy:
         exclude_calendars: list[str] | None = None,
     ) -> list[Event]:
         """Get events in a date range (YYYY-MM-DD format)."""
-        command = f"eventsFrom:{start_date} to:{end_date}"
+        # icalBuddy expects these as separate arguments, not a single string
+        command = [f"eventsFrom:{start_date}", f"to:{end_date}"]
         return self._get_events(command, include_calendars, exclude_calendars)
 
     def get_events_upcoming(
@@ -182,7 +183,7 @@ class ICalBuddy:
 
     def _get_events(
         self,
-        command: str,
+        command: str | list[str],
         include_calendars: list[str] | None = None,
         exclude_calendars: list[str] | None = None,
         skip_today: bool = False,
@@ -201,7 +202,11 @@ class ICalBuddy:
         if exclude_calendars:
             args.extend(["-ec", ",".join(exclude_calendars)])
 
-        args.append(command)
+        # Handle both single command string and list of command parts
+        if isinstance(command, list):
+            args.extend(command)
+        else:
+            args.append(command)
 
         output = self._run(args)
         events = self._parse_events(output)
