@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Credentials (tokens and secrets)
+credentials/*
+!credentials/.gitkeep
+
+# Environment
+.env
+.env.*
+.dev.vars
+
+# Wrangler (removed - no longer using Cloudflare)
+.wrangler/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+.nyc_output/
