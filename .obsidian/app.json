@@ -1,0 +1,27 @@
+{
+  "userIgnoreFilters": [
+    "claude-automations/",
+    "mcp/",
+    ".claude/"
+  ],
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "attachmentFolderPath": "./attachments",
+  "newLinkFormat": "relative",
+  "useMarkdownLinks": true,
+  "showUnsupportedFiles": false,
+  "showInlineTitle": true,
+  "showFrontmatter": false,
+  "foldHeading": true,
+  "foldIndent": true,
+  "defaultViewMode": "source",
+  "readableLineLength": true,
+  "strictLineBreaks": false,
+  "autoConvertHtml": true,
+  "tabSize": 2,
+  "vimMode": false,
+  "spellcheck": true,
+  "spellcheckLanguages": null,
+  "promptDelete": true,
+  "trashOption": "system"
+}

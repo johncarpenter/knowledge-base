@@ -1,0 +1,6 @@
+{
+  "format": "YYYY-MM-DD",
+  "folder": "operations/meetings",
+  "template": "operations/meetings/_template.md",
+  "autorun": false
+}

@@ -11,38 +11,42 @@ SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 LAUNCHD_SRC := $(SCRIPT_DIR)launchd
 LAUNCHD_DST := $(HOME)/Library/LaunchAgents
 LOG_DIR := $(HOME)/logs/claude-automations
-MCP_DIR := $(HOME)/Documents/Workspace/2Lines/knowledge-base/mcp
-KNOWLEDGE_BASE := $(HOME)/Documents/Workspace/2Lines/knowledge-base
 
-# Colors
+# Knowledge base root: relative to cwd (run make from repo root)
+KB_ROOT ?= $(CURDIR)
+MCP_DIR := $(KB_ROOT)/../mcp
+KNOWLEDGE_BASE := $(KB_ROOT)
+
+# Colors (use echo -e or printf %b so \033 is interpreted)
 GREEN := \033[0;32m
 YELLOW := \033[0;33m
 RED := \033[0;31m
 CYAN := \033[0;36m
 NC := \033[0m # No Color
+ECHO := echo -e
 
 .PHONY: help
 help: ## Show this help message
 	@echo ""
-	@echo "$(CYAN)Claude Code Automation Management$(NC)"
+	@$(ECHO) "$(CYAN)Claude Code Automation Management$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Workflows:$(NC)"
+	@$(ECHO) "$(YELLOW)Workflows:$(NC)"
 	@grep -E '^(run-|workflow-)' $(MAKEFILE_LIST) | grep -E ':.*?## ' | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "$(YELLOW)Scheduling (launchd):$(NC)"
+	@$(ECHO) "$(YELLOW)Scheduling (launchd):$(NC)"
 	@grep -E '^(install|uninstall|status|enable|disable)' $(MAKEFILE_LIST) | grep -E ':.*?## ' | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "$(YELLOW)MCP Authentication:$(NC)"
+	@$(ECHO) "$(YELLOW)MCP Authentication:$(NC)"
 	@grep -E '^auth-' $(MAKEFILE_LIST) | grep -E ':.*?## ' | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "$(YELLOW)MCP Management:$(NC)"
+	@$(ECHO) "$(YELLOW)MCP Management:$(NC)"
 	@grep -E '^(mcp-|build-)' $(MAKEFILE_LIST) | grep -E ':.*?## ' | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "$(YELLOW)Utilities:$(NC)"
+	@$(ECHO) "$(YELLOW)Utilities:$(NC)"
 	@grep -E '^(logs|clean|test)' $(MAKEFILE_LIST) | grep -E ':.*?## ' | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
 
@@ -79,72 +83,72 @@ $(LOG_DIR):
 
 .PHONY: install
 install: $(LOG_DIR) ## Install all scheduled automation agents
-	@echo "$(CYAN)Installing launchd agents...$(NC)"
+	@$(ECHO) "$(CYAN)Installing launchd agents...$(NC)"
 	@for plist in $(LAUNCHD_SRC)/*.plist; do \
 		name=$$(basename $$plist); \
 		cp $$plist $(LAUNCHD_DST)/; \
 		launchctl load $(LAUNCHD_DST)/$$name 2>/dev/null || true; \
-		echo "  $(GREEN)✓$(NC) $$name"; \
+		echo -e "  $(GREEN)✓$(NC) $$name"; \
 	done
 	@echo ""
-	@echo "$(GREEN)Done!$(NC) Run 'make status' to verify."
+	@$(ECHO) "$(GREEN)Done!$(NC) Run 'make status' to verify."
 
 .PHONY: install-morning
 install-morning: $(LOG_DIR) ## Install only morning agent
 	@cp $(LAUNCHD_SRC)/com.2lines.claude-morning.plist $(LAUNCHD_DST)/
 	@launchctl load $(LAUNCHD_DST)/com.2lines.claude-morning.plist
-	@echo "$(GREEN)✓$(NC) Morning agent installed"
+	@$(ECHO) "$(GREEN)✓$(NC) Morning agent installed"
 
 .PHONY: install-evening
 install-evening: $(LOG_DIR) ## Install only evening agent
 	@cp $(LAUNCHD_SRC)/com.2lines.claude-evening.plist $(LAUNCHD_DST)/
 	@launchctl load $(LAUNCHD_DST)/com.2lines.claude-evening.plist
-	@echo "$(GREEN)✓$(NC) Evening agent installed"
+	@$(ECHO) "$(GREEN)✓$(NC) Evening agent installed"
 
 .PHONY: uninstall
 uninstall: ## Uninstall all scheduled automation agents
-	@echo "$(CYAN)Uninstalling launchd agents...$(NC)"
+	@$(ECHO) "$(CYAN)Uninstalling launchd agents...$(NC)"
 	@for plist in $(LAUNCHD_SRC)/*.plist; do \
 		name=$$(basename $$plist); \
 		launchctl unload $(LAUNCHD_DST)/$$name 2>/dev/null || true; \
 		rm -f $(LAUNCHD_DST)/$$name; \
-		echo "  $(GREEN)✓$(NC) $$name removed"; \
+		echo -e "  $(GREEN)✓$(NC) $$name removed"; \
 	done
 
 .PHONY: status
 status: ## Show status of all launchd agents
-	@echo "$(CYAN)Claude Automation Status$(NC)"
+	@$(ECHO) "$(CYAN)Claude Automation Status$(NC)"
 	@echo ""
 	@for plist in $(LAUNCHD_SRC)/*.plist; do \
 		name=$$(basename $$plist .plist); \
 		if launchctl list 2>/dev/null | grep -q $$name; then \
-			echo "  $(GREEN)●$(NC) $$name: $(GREEN)RUNNING$(NC)"; \
+			echo -e "  $(GREEN)●$(NC) $$name: $(GREEN)RUNNING$(NC)"; \
 		elif [ -f $(LAUNCHD_DST)/$$(basename $$plist) ]; then \
-			echo "  $(YELLOW)○$(NC) $$name: $(YELLOW)LOADED$(NC) (not running)"; \
+			echo -e "  $(YELLOW)○$(NC) $$name: $(YELLOW)LOADED$(NC) (not running)"; \
 		else \
-			echo "  $(RED)○$(NC) $$name: $(RED)NOT INSTALLED$(NC)"; \
+			echo -e "  $(RED)○$(NC) $$name: $(RED)NOT INSTALLED$(NC)"; \
 		fi \
 	done
 
 .PHONY: enable-morning
 enable-morning: ## Enable (start) morning agent
 	@launchctl load $(LAUNCHD_DST)/com.2lines.claude-morning.plist 2>/dev/null || true
-	@echo "$(GREEN)✓$(NC) Morning agent enabled"
+	@$(ECHO) "$(GREEN)✓$(NC) Morning agent enabled"
 
 .PHONY: disable-morning
 disable-morning: ## Disable (stop) morning agent
 	@launchctl unload $(LAUNCHD_DST)/com.2lines.claude-morning.plist 2>/dev/null || true
-	@echo "$(YELLOW)○$(NC) Morning agent disabled"
+	@$(ECHO) "$(YELLOW)○$(NC) Morning agent disabled"
 
 .PHONY: enable-evening
 enable-evening: ## Enable (start) evening agent
 	@launchctl load $(LAUNCHD_DST)/com.2lines.claude-evening.plist 2>/dev/null || true
-	@echo "$(GREEN)✓$(NC) Evening agent enabled"
+	@$(ECHO) "$(GREEN)✓$(NC) Evening agent enabled"
 
 .PHONY: disable-evening
 disable-evening: ## Disable (stop) evening agent
 	@launchctl unload $(LAUNCHD_DST)/com.2lines.claude-evening.plist 2>/dev/null || true
-	@echo "$(YELLOW)○$(NC) Evening agent disabled"
+	@$(ECHO) "$(YELLOW)○$(NC) Evening agent disabled"
 
 # ==============================================================================
 # MCP AUTHENTICATION
@@ -152,26 +156,26 @@ disable-evening: ## Disable (stop) evening agent
 
 .PHONY: auth-harvest
 auth-harvest: ## Authenticate with Harvest (opens browser)
-	@echo "$(CYAN)Authenticating with Harvest...$(NC)"
+	@$(ECHO) "$(CYAN)Authenticating with Harvest...$(NC)"
 	@cd $(MCP_DIR)/harvest-mcp-server && node dist/cli.js auth
 
 .PHONY: auth-zoho
 auth-zoho: ## Authenticate with Zoho Projects (opens browser)
-	@echo "$(CYAN)Authenticating with Zoho Projects...$(NC)"
+	@$(ECHO) "$(CYAN)Authenticating with Zoho Projects...$(NC)"
 	@cd $(MCP_DIR)/zohoprojects-mcp-server && node dist/cli.js auth
 
 .PHONY: auth-exchange
 auth-exchange: ## Authenticate with Exchange/Outlook (opens browser)
-	@echo "$(CYAN)Authenticating with Exchange...$(NC)"
+	@$(ECHO) "$(CYAN)Authenticating with Exchange...$(NC)"
 	@cd $(MCP_DIR)/exchange-mcp && node dist/cli.js
 
 .PHONY: auth-gmail
 auth-gmail: ## Authenticate Gmail account (opens browser)
-	@echo "$(CYAN)Authenticating with Gmail...$(NC)"
+	@$(ECHO) "$(CYAN)Authenticating with Gmail...$(NC)"
 	@echo "Usage: make auth-gmail ACCOUNT=personal"
 	@echo ""
 	@if [ -z "$(ACCOUNT)" ]; then \
-		echo "$(RED)Error:$(NC) ACCOUNT is required"; \
+		echo -e "$(RED)Error:$(NC) ACCOUNT is required"; \
 		echo "Example: make auth-gmail ACCOUNT=personal"; \
 		exit 1; \
 	fi
@@ -179,14 +183,14 @@ auth-gmail: ## Authenticate Gmail account (opens browser)
 
 .PHONY: auth-gmail-list
 auth-gmail-list: ## List authenticated Gmail accounts
-	@echo "$(CYAN)Gmail Accounts:$(NC)"
+	@$(ECHO) "$(CYAN)Gmail Accounts:$(NC)"
 	@ls -1 $(MCP_DIR)/gmail-mcp/credentials/*.json 2>/dev/null | \
 		xargs -I {} basename {} _token.json | grep -v client_secrets || \
 		echo "  No accounts authenticated"
 
 .PHONY: auth-granola
 auth-granola: ## Configure Granola API key
-	@echo "$(CYAN)Configuring Granola...$(NC)"
+	@$(ECHO) "$(CYAN)Configuring Granola...$(NC)"
 	@echo ""
 	@if [ -z "$(API_KEY)" ]; then \
 		echo "Usage: make auth-granola API_KEY=grn_xxxx..."; \
@@ -205,7 +209,7 @@ auth-granola-status: ## Check Granola configuration status
 
 .PHONY: auth-all
 auth-all: ## Run all auth flows (interactive)
-	@echo "$(CYAN)Running all authentication flows...$(NC)"
+	@$(ECHO) "$(CYAN)Running all authentication flows...$(NC)"
 	@echo ""
 	@echo "This will open browser windows for each service."
 	@echo "Press Enter to continue or Ctrl+C to cancel."
@@ -216,50 +220,50 @@ auth-all: ## Run all auth flows (interactive)
 	@echo ""
 	@$(MAKE) -s auth-exchange
 	@echo ""
-	@echo "$(YELLOW)Note:$(NC) Gmail and Granola require additional parameters."
+	@$(ECHO) "$(YELLOW)Note:$(NC) Gmail and Granola require additional parameters."
 	@echo "  Gmail: make auth-gmail ACCOUNT=<name>"
 	@echo "  Granola: make auth-granola API_KEY=<key>"
 
 .PHONY: auth-status
 auth-status: ## Check authentication status for all MCPs
-	@echo "$(CYAN)MCP Authentication Status$(NC)"
+	@$(ECHO) "$(CYAN)MCP Authentication Status$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Harvest:$(NC)"
+	@$(ECHO) "$(YELLOW)Harvest:$(NC)"
 	@if [ -f $(MCP_DIR)/harvest-mcp-server/credentials/token.json ]; then \
-		echo "  $(GREEN)✓$(NC) Token exists"; \
+		echo -e "  $(GREEN)✓$(NC) Token exists"; \
 	else \
-		echo "  $(RED)✗$(NC) Not authenticated (run: make auth-harvest)"; \
+		echo -e "  $(RED)✗$(NC) Not authenticated (run: make auth-harvest)"; \
 	fi
 	@echo ""
-	@echo "$(YELLOW)Zoho Projects:$(NC)"
+	@$(ECHO) "$(YELLOW)Zoho Projects:$(NC)"
 	@if [ -f $(MCP_DIR)/zohoprojects-mcp-server/credentials/token.json ]; then \
-		echo "  $(GREEN)✓$(NC) Token exists"; \
+		echo -e "  $(GREEN)✓$(NC) Token exists"; \
 	else \
-		echo "  $(RED)✗$(NC) Not authenticated (run: make auth-zoho)"; \
+		echo -e "  $(RED)✗$(NC) Not authenticated (run: make auth-zoho)"; \
 	fi
 	@echo ""
-	@echo "$(YELLOW)Exchange:$(NC)"
+	@$(ECHO) "$(YELLOW)Exchange:$(NC)"
 	@if [ -f $(MCP_DIR)/exchange-mcp/credentials/token.json ]; then \
-		echo "  $(GREEN)✓$(NC) Token exists"; \
+		echo -e "  $(GREEN)✓$(NC) Token exists"; \
 	else \
-		echo "  $(RED)✗$(NC) Not authenticated (run: make auth-exchange)"; \
+		echo -e "  $(RED)✗$(NC) Not authenticated (run: make auth-exchange)"; \
 	fi
 	@echo ""
-	@echo "$(YELLOW)Gmail:$(NC)"
+	@$(ECHO) "$(YELLOW)Gmail:$(NC)"
 	@if ls $(MCP_DIR)/gmail-mcp/credentials/*_token.json 1>/dev/null 2>&1; then \
-		echo "  $(GREEN)✓$(NC) Accounts:"; \
+		echo -e "  $(GREEN)✓$(NC) Accounts:"; \
 		ls -1 $(MCP_DIR)/gmail-mcp/credentials/*_token.json 2>/dev/null | \
 			xargs -I {} basename {} _token.json | sed 's/^/    - /'; \
 	else \
-		echo "  $(RED)✗$(NC) No accounts (run: make auth-gmail ACCOUNT=<name>)"; \
+		echo -e "  $(RED)✗$(NC) No accounts (run: make auth-gmail ACCOUNT=<name>)"; \
 	fi
 	@echo ""
-	@echo "$(YELLOW)Granola:$(NC)"
+	@$(ECHO) "$(YELLOW)Granola:$(NC)"
 	@cd $(MCP_DIR)/granola-mcp && node dist/cli.js status 2>/dev/null | sed 's/^/  /' || \
-		echo "  $(RED)✗$(NC) Not configured"
+		echo -e "  $(RED)✗$(NC) Not configured"
 	@echo ""
-	@echo "$(YELLOW)Calendar:$(NC)"
-	@echo "  $(GREEN)✓$(NC) Uses macOS Calendar (system permissions)"
+	@$(ECHO) "$(YELLOW)Calendar:$(NC)"
+	@$(ECHO) "  $(GREEN)✓$(NC) Uses macOS Calendar (system permissions)"
 
 # ==============================================================================
 # MCP MANAGEMENT
@@ -270,53 +274,53 @@ build-all: build-harvest build-zoho build-exchange build-granola build-gmail bui
 
 .PHONY: build-harvest
 build-harvest: ## Build Harvest MCP server
-	@echo "$(CYAN)Building Harvest MCP...$(NC)"
+	@$(ECHO) "$(CYAN)Building Harvest MCP...$(NC)"
 	@cd $(MCP_DIR)/harvest-mcp-server && npm run build
 
 .PHONY: build-zoho
 build-zoho: ## Build Zoho Projects MCP server
-	@echo "$(CYAN)Building Zoho MCP...$(NC)"
+	@$(ECHO) "$(CYAN)Building Zoho MCP...$(NC)"
 	@cd $(MCP_DIR)/zohoprojects-mcp-server && npm run build
 
 .PHONY: build-exchange
 build-exchange: ## Build Exchange MCP server
-	@echo "$(CYAN)Building Exchange MCP...$(NC)"
+	@$(ECHO) "$(CYAN)Building Exchange MCP...$(NC)"
 	@cd $(MCP_DIR)/exchange-mcp && npm run build
 
 .PHONY: build-granola
 build-granola: ## Build Granola MCP server
-	@echo "$(CYAN)Building Granola MCP...$(NC)"
+	@$(ECHO) "$(CYAN)Building Granola MCP...$(NC)"
 	@cd $(MCP_DIR)/granola-mcp && npm run build
 
 .PHONY: build-gmail
 build-gmail: ## Install Gmail MCP dependencies
-	@echo "$(CYAN)Installing Gmail MCP dependencies...$(NC)"
+	@$(ECHO) "$(CYAN)Installing Gmail MCP dependencies...$(NC)"
 	@cd $(MCP_DIR)/gmail-mcp && uv sync
 
 .PHONY: build-calendar
 build-calendar: ## Install Calendar MCP dependencies
-	@echo "$(CYAN)Installing Calendar MCP dependencies...$(NC)"
+	@$(ECHO) "$(CYAN)Installing Calendar MCP dependencies...$(NC)"
 	@cd $(MCP_DIR)/calendar-mcp && uv sync
 
 .PHONY: mcp-status
 mcp-status: ## Check if MCP servers are built/ready
-	@echo "$(CYAN)MCP Build Status$(NC)"
+	@$(ECHO) "$(CYAN)MCP Build Status$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Node.js MCPs:$(NC)"
+	@$(ECHO) "$(YELLOW)Node.js MCPs:$(NC)"
 	@for mcp in harvest-mcp-server zohoprojects-mcp-server exchange-mcp granola-mcp; do \
 		if [ -d $(MCP_DIR)/$$mcp/dist ]; then \
-			echo "  $(GREEN)✓$(NC) $$mcp"; \
+			echo -e "  $(GREEN)✓$(NC) $$mcp"; \
 		else \
-			echo "  $(RED)✗$(NC) $$mcp (run: make build-$${mcp%%-mcp*})"; \
+			echo -e "  $(RED)✗$(NC) $$mcp (run: make build-$${mcp%%-mcp*})"; \
 		fi \
 	done
 	@echo ""
-	@echo "$(YELLOW)Python MCPs:$(NC)"
+	@$(ECHO) "$(YELLOW)Python MCPs:$(NC)"
 	@for mcp in gmail-mcp calendar-mcp; do \
 		if [ -d $(MCP_DIR)/$$mcp/.venv ]; then \
-			echo "  $(GREEN)✓$(NC) $$mcp"; \
+			echo -e "  $(GREEN)✓$(NC) $$mcp"; \
 		else \
-			echo "  $(RED)✗$(NC) $$mcp (run: make build-$${mcp%%-mcp})"; \
+			echo -e "  $(RED)✗$(NC) $$mcp (run: make build-$${mcp%%-mcp})"; \
 		fi \
 	done
 
@@ -326,7 +330,7 @@ mcp-status: ## Check if MCP servers are built/ready
 
 .PHONY: logs
 logs: ## Show recent automation logs
-	@echo "$(CYAN)Recent Automation Logs$(NC)"
+	@$(ECHO) "$(CYAN)Recent Automation Logs$(NC)"
 	@echo ""
 	@if [ -f $(LOG_DIR)/runner.log ]; then \
 		tail -30 $(LOG_DIR)/runner.log; \
@@ -346,10 +350,10 @@ logs-evening: ## Show most recent evening workflow log
 
 .PHONY: logs-launchd
 logs-launchd: ## Show launchd agent logs
-	@echo "$(CYAN)Launchd Morning Log:$(NC)"
+	@$(ECHO) "$(CYAN)Launchd Morning Log:$(NC)"
 	@tail -20 $(LOG_DIR)/launchd-morning.log 2>/dev/null || echo "  No log"
 	@echo ""
-	@echo "$(CYAN)Launchd Evening Log:$(NC)"
+	@$(ECHO) "$(CYAN)Launchd Evening Log:$(NC)"
 	@tail -20 $(LOG_DIR)/launchd-evening.log 2>/dev/null || echo "  No log"
 
 .PHONY: logs-follow
@@ -358,9 +362,9 @@ logs-follow: ## Follow runner log in real-time
 
 .PHONY: clean-logs
 clean-logs: ## Remove logs older than 7 days
-	@echo "$(CYAN)Cleaning old logs...$(NC)"
+	@$(ECHO) "$(CYAN)Cleaning old logs...$(NC)"
 	@find $(LOG_DIR) -name "*.log" -mtime +7 -delete 2>/dev/null || true
-	@echo "$(GREEN)Done$(NC)"
+	@$(ECHO) "$(GREEN)Done$(NC)"
 
 .PHONY: test
 test: run-test ## Alias for run-test
