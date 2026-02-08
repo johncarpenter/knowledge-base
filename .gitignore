@@ -10,9 +10,10 @@
 
 # Environment and config with secrets
 .env
-.env.*
+.env.local
 *.local
-.mcp.json
+# Note: .env.example is allowed (template only, no secrets)
+# Note: .mcp.json uses ${ENV_VAR} references, not actual secrets
 
 # Python
 .venv/

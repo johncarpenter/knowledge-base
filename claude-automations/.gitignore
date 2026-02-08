@@ -1,0 +1,31 @@
+# Secrets
+.env
+*.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Node.js (for MCP servers)
+node_modules/
+dist/
+
+# Python (for MCP servers)
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Credentials (handled per-MCP, but just in case)
+**/credentials/token.json

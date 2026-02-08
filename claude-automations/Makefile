@@ -164,6 +164,24 @@ auth-zoho: ## Authenticate with Zoho Projects (opens browser)
 	@$(ECHO) "$(CYAN)Authenticating with Zoho Projects...$(NC)"
 	@cd $(MCP_DIR)/zohoprojects-mcp-server && node dist/cli.js auth
 
+.PHONY: auth-jira
+auth-jira: ## Show Jira authentication setup instructions
+	@$(ECHO) "$(CYAN)Jira Authentication Setup$(NC)"
+	@echo ""
+	@echo "Jira uses environment variables for authentication."
+	@echo ""
+	@echo "1. Get an API token from:"
+	@echo "   https://id.atlassian.com/manage-profile/security/api-tokens"
+	@echo ""
+	@echo "2. Copy .env.example to .env and fill in your values:"
+	@echo "   cp $(KNOWLEDGE_BASE)/.env.example $(KNOWLEDGE_BASE)/.env"
+	@echo ""
+	@echo "3. Source the file before running Claude:"
+	@echo "   source $(KNOWLEDGE_BASE)/.env"
+	@echo ""
+	@echo "   Or add to your ~/.zshrc:"
+	@echo "   source $(KNOWLEDGE_BASE)/.env"
+
 .PHONY: auth-exchange
 auth-exchange: ## Authenticate with Exchange/Outlook (opens browser)
 	@$(ECHO) "$(CYAN)Authenticating with Exchange...$(NC)"
@@ -184,9 +202,14 @@ auth-gmail: ## Authenticate Gmail account (opens browser)
 .PHONY: auth-gmail-list
 auth-gmail-list: ## List authenticated Gmail accounts
 	@$(ECHO) "$(CYAN)Gmail Accounts:$(NC)"
-	@ls -1 $(MCP_DIR)/gmail-mcp/credentials/*.json 2>/dev/null | \
-		xargs -I {} basename {} _token.json | grep -v client_secrets || \
-		echo "  No accounts authenticated"
+	@found=0; \
+	for dir in $(MCP_DIR)/gmail-mcp/credentials/*/; do \
+		if [ -f "$$dir/token.json" ]; then \
+			echo "  - $$(basename $$dir)"; \
+			found=1; \
+		fi \
+	done; \
+	if [ $$found -eq 0 ]; then echo "  No accounts authenticated"; fi
 
 .PHONY: auth-granola
 auth-granola: ## Configure Granola API key
@@ -242,18 +265,35 @@ auth-status: ## Check authentication status for all MCPs
 		echo -e "  $(RED)✗$(NC) Not authenticated (run: make auth-zoho)"; \
 	fi
 	@echo ""
+	@$(ECHO) "$(YELLOW)Jira:$(NC)"
+	@if [ -n "$$JIRA_URL" ] && [ -n "$$JIRA_API_TOKEN" ]; then \
+		echo -e "  $(GREEN)✓$(NC) Environment configured: $$JIRA_URL"; \
+	elif [ -f $(KNOWLEDGE_BASE)/.env ]; then \
+		echo -e "  $(YELLOW)○$(NC) .env exists (source it: source .env)"; \
+	else \
+		echo -e "  $(RED)✗$(NC) Not configured (run: make auth-jira)"; \
+	fi
+	@echo ""
 	@$(ECHO) "$(YELLOW)Exchange:$(NC)"
-	@if [ -f $(MCP_DIR)/exchange-mcp/credentials/token.json ]; then \
-		echo -e "  $(GREEN)✓$(NC) Token exists"; \
+	@if [ -f $(HOME)/.config/exchange-mcp/config.json ]; then \
+		accounts=$$(grep -o '"email": "[^"]*"' $(HOME)/.config/exchange-mcp/config.json 2>/dev/null | cut -d'"' -f4 | tr '\n' ', ' | sed 's/,$$//'); \
+		if [ -n "$$accounts" ]; then \
+			echo -e "  $(GREEN)✓$(NC) Accounts: $$accounts"; \
+		else \
+			echo -e "  $(YELLOW)○$(NC) Config exists but no accounts"; \
+		fi \
 	else \
 		echo -e "  $(RED)✗$(NC) Not authenticated (run: make auth-exchange)"; \
 	fi
 	@echo ""
 	@$(ECHO) "$(YELLOW)Gmail:$(NC)"
-	@if ls $(MCP_DIR)/gmail-mcp/credentials/*_token.json 1>/dev/null 2>&1; then \
+	@if ls $(MCP_DIR)/gmail-mcp/credentials/*/token.json 1>/dev/null 2>&1; then \
 		echo -e "  $(GREEN)✓$(NC) Accounts:"; \
-		ls -1 $(MCP_DIR)/gmail-mcp/credentials/*_token.json 2>/dev/null | \
-			xargs -I {} basename {} _token.json | sed 's/^/    - /'; \
+		for dir in $(MCP_DIR)/gmail-mcp/credentials/*/; do \
+			if [ -f "$$dir/token.json" ]; then \
+				basename "$$dir" | sed 's/^/    - /'; \
+			fi \
+		done \
 	else \
 		echo -e "  $(RED)✗$(NC) No accounts (run: make auth-gmail ACCOUNT=<name>)"; \
 	fi

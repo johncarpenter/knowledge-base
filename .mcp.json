@@ -1,0 +1,46 @@
+{
+    "mcpServers": {
+        "jira": {
+            "command": "uvx",
+            "args": ["mcp-atlassian"],
+            "env": {
+                "JIRA_URL": "${JIRA_URL}",
+                "JIRA_USERNAME": "${JIRA_USERNAME}",
+                "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
+            }
+        },
+        "gmail": {
+            "command": "uv",
+            "args": [
+                "run",
+                "--directory",
+                "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/gmail-mcp",
+                "gmail-mcp"
+            ]
+        },
+        "calendar": {
+            "command": "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/calendar-mcp/.venv/bin/calendar-mcp",
+            "args": []
+        },
+        "exchange": {
+            "command": "node",
+            "args": [
+                "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/exchange-mcp/dist/index.js"
+            ]
+        },
+        "harvest": {
+            "command": "node",
+            "args": [
+                "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/harvest-mcp-server/dist/cli.js",
+                "serve"
+            ]
+        },
+        "zoho": {
+            "command": "node",
+            "args": [
+                "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/zohoprojects-mcp-server/dist/cli.js",
+                "serve"
+            ]
+        }
+    }
+}
