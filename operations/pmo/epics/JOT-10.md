@@ -1,17 +1,17 @@
 ---
-key: CIR-15
-project: CIR
-summary: "Infrastructure"
+key: JOT-10
+project: JOT
+summary: "ACS Cleaning App Development"
 status: To Do
-priority: Low
+priority: Medium
 type: Epic
-jira_url: https://2linessoftware.atlassian.net/browse/CIR-15
+jira_url: https://2linessoftware.atlassian.net/browse/JOT-10
 synced: 2026-02-08
 ---
 
-# CIR-15: Infrastructure
+# JOT-10: ACS Cleaning App Development
 
-Infrastructure and DevOps work including data pipelines, deployment, and platform operations.
+ACS cleaning application development and deployment work.
 
 ## Child Tasks
 
@@ -21,7 +21,7 @@ TABLE WITHOUT ID
   summary as "Summary",
   status as "Status"
 FROM "operations/pmo/tasks"
-WHERE epic = "CIR-15"
+WHERE epic = "JOT-10"
 SORT key ASC
 ```
 

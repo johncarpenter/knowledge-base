@@ -1,17 +1,17 @@
 ---
-key: CIR-15
-project: CIR
-summary: "Infrastructure"
+key: ZANE-3
+project: ZANE
+summary: "Operations & Compliance"
 status: To Do
-priority: Low
+priority: Medium
 type: Epic
-jira_url: https://2linessoftware.atlassian.net/browse/CIR-15
+jira_url: https://2linessoftware.atlassian.net/browse/ZANE-3
 synced: 2026-02-08
 ---
 
-# CIR-15: Infrastructure
+# ZANE-3: Operations & Compliance
 
-Infrastructure and DevOps work including data pipelines, deployment, and platform operations.
+Operational work including compliance, security, and infrastructure.
 
 ## Child Tasks
 
@@ -21,7 +21,7 @@ TABLE WITHOUT ID
   summary as "Summary",
   status as "Status"
 FROM "operations/pmo/tasks"
-WHERE epic = "CIR-15"
+WHERE epic = "ZANE-3"
 SORT key ASC
 ```
 

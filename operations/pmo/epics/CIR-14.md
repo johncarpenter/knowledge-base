@@ -3,7 +3,7 @@ key: CIR-14
 project: CIR
 summary: "UX Improvements"
 status: To Do
-priority: Medium
+priority: Low
 type: Epic
 jira_url: https://2linessoftware.atlassian.net/browse/CIR-14
 synced: 2026-02-08

@@ -3,7 +3,7 @@ key: CIR-13
 project: CIR
 summary: "AI & Chat Features"
 status: To Do
-priority: High
+priority: Low
 type: Epic
 jira_url: https://2linessoftware.atlassian.net/browse/CIR-13
 synced: 2026-02-08

@@ -1,17 +1,17 @@
 ---
-key: CIR-15
-project: CIR
-summary: "Infrastructure"
+key: ZANE-2
+project: ZANE
+summary: "MVP Development"
 status: To Do
-priority: Low
+priority: High
 type: Epic
-jira_url: https://2linessoftware.atlassian.net/browse/CIR-15
+jira_url: https://2linessoftware.atlassian.net/browse/ZANE-2
 synced: 2026-02-08
 ---
 
-# CIR-15: Infrastructure
+# ZANE-2: MVP Development
 
-Infrastructure and DevOps work including data pipelines, deployment, and platform operations.
+Core MVP development work for Zane platform.
 
 ## Child Tasks
 
@@ -21,7 +21,7 @@ TABLE WITHOUT ID
   summary as "Summary",
   status as "Status"
 FROM "operations/pmo/tasks"
-WHERE epic = "CIR-15"
+WHERE epic = "ZANE-2"
 SORT key ASC
 ```
 

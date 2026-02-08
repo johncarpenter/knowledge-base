@@ -3,7 +3,7 @@ key: CIR-17
 project: CIR
 summary: "Bug Fixes"
 status: To Do
-priority: Medium
+priority: Low
 type: Epic
 jira_url: https://2linessoftware.atlassian.net/browse/CIR-17
 synced: 2026-02-08

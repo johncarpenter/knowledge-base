@@ -1,17 +1,17 @@
 ---
-key: CIR-15
-project: CIR
-summary: "Infrastructure"
+key: JOT-12
+project: JOT
+summary: "Concrete Reflections Assessment"
 status: To Do
-priority: Low
+priority: Medium
 type: Epic
-jira_url: https://2linessoftware.atlassian.net/browse/CIR-15
+jira_url: https://2linessoftware.atlassian.net/browse/JOT-12
 synced: 2026-02-08
 ---
 
-# CIR-15: Infrastructure
+# JOT-12: Concrete Reflections Assessment
 
-Infrastructure and DevOps work including data pipelines, deployment, and platform operations.
+Concrete Reflections technology assessment and recommendations.
 
 ## Child Tasks
 
@@ -21,7 +21,7 @@ TABLE WITHOUT ID
   summary as "Summary",
   status as "Status"
 FROM "operations/pmo/tasks"
-WHERE epic = "CIR-15"
+WHERE epic = "JOT-12"
 SORT key ASC
 ```
 
