@@ -189,9 +189,11 @@ For context, here are the known client projects:
 
 | Client | Jira Project Key |
 |--------|-----------------|
-| Pacwest | PAC |
-| Circuit | CIRCUIT |
+| Circuit | CIR |
 | JOT Digital | JOT |
+| Pacwest | PAC |
+| 2Lines Software | PER |
+| Runboard 2.0 | RUN |
 | Stratenym | STRAT |
 | Zane | ZANE |
 
@@ -211,6 +213,11 @@ When user mentions a client name, map to the appropriate project key.
 ## Integration with PMO
 
 After any Jira operation, consider:
-- If creating/completing issues, ask if user wants to log time (link to `/harvest` or `/zoho`)
-- For sprint planning, suggest reviewing with `/jira [PROJECT] sprint`
-- For client prioritization, show issues across projects with `/jira my`
+- If creating/completing issues, ask if user wants to log time (link to client skill like `/circuit`)
+- For cross-project view, suggest `/pmo` for dashboard
+- After creating issues, run `/pmo-sync` to update local cache
+- For weekly planning, suggest `/weekly-plan`
+- For capacity tracking, suggest `/capacity`
+
+Local task cache: `operations/pmo/tasks/`
+Client pages: `operations/pmo/clients/`

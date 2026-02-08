@@ -74,17 +74,28 @@ claude-automations/
 ├── run-workflow.sh     # Main workflow runner (edit to add workflows)
 ├── install.sh          # Legacy installer (use Makefile instead)
 ├── launchd/            # launchd plist files
+│   ├── com.2lines.qmd-indexer.plist
 │   ├── com.2lines.claude-morning.plist
+│   ├── com.2lines.granola-reminder.plist
 │   └── com.2lines.claude-evening.plist
 └── README.md
 ```
+
+## Daily Schedule
+
+| Time | Agent | What it does |
+|------|-------|--------------|
+| 3:30 AM | `qmd-indexer` | Re-indexes knowledge base (`qmd update && qmd embed`) |
+| 4:00 AM | `claude-morning` | Runs `/daily-digest` workflow |
+| 7:00 PM | `granola-reminder` | macOS notification to check Granola auth |
+| 8:00 PM | `claude-evening` | Runs `/time-entry-from-calendar` workflow |
 
 ## Workflows
 
 | Workflow | Schedule | What it does |
 |----------|----------|--------------|
-| `morning` | 7:30 AM daily | Runs `/daily-digest` |
-| `evening` | 5:30 PM daily | Runs `/time-entry-from-calendar` |
+| `morning` | 4:00 AM daily | Runs `/daily-digest` |
+| `evening` | 8:00 PM daily | Runs `/time-entry-from-calendar` |
 | `weekly` | (not scheduled) | Placeholder for weekly tasks |
 | `test` | Manual only | Verifies automation works |
 
@@ -95,8 +106,10 @@ claude-automations/
 make install
 
 # Install individual agents
-make install-morning
-make install-evening
+make install-indexer    # QMD indexer (3:30 AM)
+make install-morning    # Daily digest (4:00 AM)
+make install-reminder   # Granola auth reminder (7:00 PM)
+make install-evening    # Timesheet (8:00 PM)
 
 # Check status
 make status
@@ -104,6 +117,8 @@ make status
 # Enable/disable without uninstalling
 make disable-morning
 make enable-morning
+make disable-indexer
+make enable-indexer
 
 # Remove all scheduled agents
 make uninstall

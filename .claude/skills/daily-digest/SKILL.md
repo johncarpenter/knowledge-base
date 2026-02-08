@@ -1,18 +1,19 @@
 ---
 name: daily-digest
 description: >
-  Generate a comprehensive daily digest combining emails (last 2 days), meeting notes
-  (previous day's action items, decisions, summaries), and upcoming calendar events
-  (today and tomorrow). Saves to operations/ folder as markdown. Use this skill to start
-  the day with a complete overview or to catch up after time away.
+  Generate a comprehensive daily digest combining weekly plan (Epic focus and tasks),
+  emails (last 2 days), meeting notes (previous day's action items, decisions, summaries),
+  and upcoming calendar events (today and tomorrow). Saves to operations/ folder as markdown.
+  Use this skill to start the day with a complete overview or to catch up after time away.
   Triggers: "daily digest", "morning briefing", "daily summary", "catch me up",
   "what do I need to know", "daily overview", "morning summary", "start my day",
   "briefing", "what's happening today".
 ---
 
-# Daily Digest — Email, Meetings & Calendar Integration
+# Daily Digest — Email, Meetings, Calendar & Weekly Plan Integration
 
 Generate a comprehensive daily digest combining:
+- **Weekly Plan** — current Epic focus and tasks from `operations/pmo/weekly-plan.md`
 - **Emails** (last 2 days) — categorized by action type
 - **Meetings** (previous day) — action items, decisions, and summaries
 - **Calendar** (today + tomorrow) — upcoming events
@@ -49,11 +50,27 @@ Output saved to `operations/YYYY-MM-DD-daily-digest.md`.
 | `mcp__calendar__calendar_tomorrow` | Get tomorrow's calendar events |
 | `mcp__calendar__calendar_list` | List all synced calendars |
 
+### Weekly Plan (Local File)
+| File | Purpose |
+|---|---|
+| `operations/pmo/weekly-plan.md` | Current week's Epic focus and selected tasks |
+
 ## Workflow
 
 ### 1. Gather Data (Run in Parallel)
 
 Execute these data gathering operations concurrently:
+
+#### Weekly Plan (Local)
+```
+Read operations/pmo/weekly-plan.md
+
+Extract from "Current Week" section:
+- Week dates (e.g., "2026-02-03 to 2026-02-09")
+- Epic Focus table (priority, key, title, project, status)
+- Tasks This Week checklist
+- Commitments list
+```
 
 #### Emails (Last 2 Days)
 ```
@@ -124,7 +141,34 @@ For each event, note:
 # Daily Digest: [Day of Week], [Month Day, Year]
 
 **Generated:** YYYY-MM-DD HH:MM
-**Coverage:** Emails (last 2 days), Meetings (yesterday), Calendar (today + tomorrow)
+**Week:** W06 (Feb 3-9, 2026)
+**Coverage:** Weekly plan, emails (2 days), meetings (yesterday), calendar (today + tomorrow)
+
+---
+
+## This Week's Focus
+
+### Epic Priorities
+
+| # | Epic | Project | Status |
+|---|------|---------|--------|
+| 1 | [CIR-13](https://2linessoftware.atlassian.net/browse/CIR-13): AI & Chat Features | Circuit | In Progress |
+| 2 | [PAC-8](https://2linessoftware.atlassian.net/browse/PAC-8): Data Warehouse | Pacwest | In Progress |
+
+### Tasks This Week
+
+- [ ] CIR-50: Implement chat UI
+- [x] CIR-51: Add AI response handling _(completed)_
+- [ ] PAC-20: Schema design
+- [ ] PAC-21: ETL pipeline
+
+### Commitments
+
+- [ ] Complete chat UI implementation (CIR-50)
+- [x] Finish schema design for data warehouse
+- [ ] Start AI response handling
+
+> _From `operations/pmo/weekly-plan.md`. Run `/weekly-plan review` to update._
 
 ---
 
@@ -190,14 +234,18 @@ For each event, note:
 
 ## Priority Actions for Today
 
-1. **[Most urgent action]** — Source: [email/meeting/calendar]
-2. **[Second priority]** — Source: [email/meeting/calendar]
-3. **[Third priority]** — Source: [email/meeting/calendar]
+Synthesize from weekly plan, meetings, and emails:
+
+1. **[Task from weekly plan that aligns with today's calendar]** — Source: weekly-plan + calendar
+2. **[Urgent email or meeting follow-up]** — Source: email/meeting
+3. **[Next task from weekly commitments]** — Source: weekly-plan
 
 ---
 
 ## Statistics
 
+- **Weekly Epics in focus:** N
+- **Weekly tasks remaining:** N of M
 - **Meetings yesterday:** N
 - **Action items from meetings:** N
 - **Emails received (2 days):** N
@@ -241,14 +289,17 @@ custom_end="2026-02-06"
 
 ## Tips
 
+- **Weekly plan first:** The weekly focus section anchors the day — what Epics matter this week?
+- **Cross-reference:** Link emails and meetings to weekly Epics when relevant (e.g., "relates to CIR-13")
 - **Parallel fetching:** Fetch emails, meetings, and calendar simultaneously for speed
 - **Email volume:** If >100 emails, focus on non-newsletter, non-promotional content
 - **Meeting priority:** Prioritize meetings with action items in the summary
 - **Calendar prep:** Flag events happening in the next 2 hours as needing immediate attention
-- **Cross-reference:** Note when calendar events relate to meeting follow-ups or email threads
+- **No weekly plan?** If `operations/pmo/weekly-plan.md` is empty, suggest running `/weekly-plan`
 
 ## Error Handling
 
+- Weekly plan missing/empty → Show "No weekly plan set. Run `/weekly-plan` to prioritize your Epics."
 - MCP not connected → Skip that section, note in output
 - No meetings found → State "No meetings recorded for [date]"
 - No emails found → State "No new emails in the past 2 days"

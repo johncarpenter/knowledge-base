@@ -71,8 +71,10 @@ Commands:
     run-now <name>      Manually trigger an agent (for testing)
 
 Available agents:
-    com.2lines.claude-morning   Daily digest at 7:30 AM
-    com.2lines.claude-evening   Timesheet entries at 5:30 PM
+    com.2lines.qmd-indexer      Re-index knowledge base at 3:30 AM
+    com.2lines.claude-morning   Daily digest at 4:00 AM
+    com.2lines.granola-reminder Granola auth check notification at 7:00 PM
+    com.2lines.claude-evening   Timesheet entries at 8:00 PM
 
 Examples:
     $(basename "$0") install-all

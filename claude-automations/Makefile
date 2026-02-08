@@ -93,14 +93,26 @@ install: $(LOG_DIR) ## Install all scheduled automation agents
 	@echo ""
 	@$(ECHO) "$(GREEN)Done!$(NC) Run 'make status' to verify."
 
+.PHONY: install-indexer
+install-indexer: $(LOG_DIR) ## Install QMD indexer agent (3:30 AM)
+	@cp $(LAUNCHD_SRC)/com.2lines.qmd-indexer.plist $(LAUNCHD_DST)/
+	@launchctl load $(LAUNCHD_DST)/com.2lines.qmd-indexer.plist
+	@$(ECHO) "$(GREEN)✓$(NC) QMD indexer agent installed"
+
 .PHONY: install-morning
-install-morning: $(LOG_DIR) ## Install only morning agent
+install-morning: $(LOG_DIR) ## Install only morning agent (4:00 AM)
 	@cp $(LAUNCHD_SRC)/com.2lines.claude-morning.plist $(LAUNCHD_DST)/
 	@launchctl load $(LAUNCHD_DST)/com.2lines.claude-morning.plist
 	@$(ECHO) "$(GREEN)✓$(NC) Morning agent installed"
 
+.PHONY: install-reminder
+install-reminder: ## Install Granola reminder (7:00 PM)
+	@cp $(LAUNCHD_SRC)/com.2lines.granola-reminder.plist $(LAUNCHD_DST)/
+	@launchctl load $(LAUNCHD_DST)/com.2lines.granola-reminder.plist
+	@$(ECHO) "$(GREEN)✓$(NC) Granola reminder installed"
+
 .PHONY: install-evening
-install-evening: $(LOG_DIR) ## Install only evening agent
+install-evening: $(LOG_DIR) ## Install only evening agent (8:00 PM)
 	@cp $(LAUNCHD_SRC)/com.2lines.claude-evening.plist $(LAUNCHD_DST)/
 	@launchctl load $(LAUNCHD_DST)/com.2lines.claude-evening.plist
 	@$(ECHO) "$(GREEN)✓$(NC) Evening agent installed"
@@ -149,6 +161,26 @@ enable-evening: ## Enable (start) evening agent
 disable-evening: ## Disable (stop) evening agent
 	@launchctl unload $(LAUNCHD_DST)/com.2lines.claude-evening.plist 2>/dev/null || true
 	@$(ECHO) "$(YELLOW)○$(NC) Evening agent disabled"
+
+.PHONY: enable-indexer
+enable-indexer: ## Enable (start) QMD indexer agent
+	@launchctl load $(LAUNCHD_DST)/com.2lines.qmd-indexer.plist 2>/dev/null || true
+	@$(ECHO) "$(GREEN)✓$(NC) QMD indexer enabled"
+
+.PHONY: disable-indexer
+disable-indexer: ## Disable (stop) QMD indexer agent
+	@launchctl unload $(LAUNCHD_DST)/com.2lines.qmd-indexer.plist 2>/dev/null || true
+	@$(ECHO) "$(YELLOW)○$(NC) QMD indexer disabled"
+
+.PHONY: enable-reminder
+enable-reminder: ## Enable (start) Granola reminder
+	@launchctl load $(LAUNCHD_DST)/com.2lines.granola-reminder.plist 2>/dev/null || true
+	@$(ECHO) "$(GREEN)✓$(NC) Granola reminder enabled"
+
+.PHONY: disable-reminder
+disable-reminder: ## Disable (stop) Granola reminder
+	@launchctl unload $(LAUNCHD_DST)/com.2lines.granola-reminder.plist 2>/dev/null || true
+	@$(ECHO) "$(YELLOW)○$(NC) Granola reminder disabled"
 
 # ==============================================================================
 # MCP AUTHENTICATION
