@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Location & Timezone
+
+- **Location:** Edmonton, Alberta, Canada
+- **Timezone:** Mountain Time (America/Edmonton)
+- **UTC Offset:** UTC-7 (MST) / UTC-6 (MDT during daylight saving)
+
+All times in this repo and in conversations should use **local Mountain Time** unless explicitly stated otherwise.
+
 ## What This Repo Is
 
 This is a **knowledge base and memory system** for 2Lines Software. It aggregates information from various sources (meetings, research, client interactions) and stores them as markdown files within a structured directory hierarchy. The repo serves as the company's persistent memory — a single place to capture, organize, and retrieve institutional knowledge. There is no application code, build system, or test suite.

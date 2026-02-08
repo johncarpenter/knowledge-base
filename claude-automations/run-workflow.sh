@@ -12,7 +12,7 @@ set -euo pipefail
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="${HOME}/logs/claude-automations"
-CLAUDE_BIN="${CLAUDE_BIN:-/Users/john/.local/bin/claude}"
+CLAUDE_BIN="${CLAUDE_BIN:-/opt/homebrew/bin/claude}"
 KNOWLEDGE_BASE="${HOME}/Documents/Workspace/2Lines/knowledge-base"
 
 # Ensure log directory exists
@@ -35,6 +35,7 @@ run_claude() {
     log "Starting: $name"
 
     if $CLAUDE_BIN -p "$prompt" \
+        --dangerously-skip-permissions \
         --output-format text \
         2>&1 | tee "$log_file"; then
         log "Completed: $name"
@@ -55,6 +56,7 @@ run_claude_in() {
     log "Starting: $name (in $dir)"
 
     if (cd "$dir" && $CLAUDE_BIN -p "$prompt" \
+        --dangerously-skip-permissions \
         --output-format text \
         2>&1 | tee "$log_file"); then
         log "Completed: $name"
