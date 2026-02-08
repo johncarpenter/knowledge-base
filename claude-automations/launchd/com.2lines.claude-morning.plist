@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.2lines.claude-morning</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/john/Documents/Workspace/2Lines/knowledge-base/claude-automations/run-workflow.sh</string>
+        <string>morning</string>
+    </array>
+
+    <!-- Run at 7:30 AM every day -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>7</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <!-- Environment variables Claude might need -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/Users/john/.local/bin</string>
+        <key>HOME</key>
+        <string>/Users/john</string>
+    </dict>
+
+    <!-- Log output -->
+    <key>StandardOutPath</key>
+    <string>/Users/john/logs/claude-automations/launchd-morning.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/john/logs/claude-automations/launchd-morning.log</string>
+
+    <!-- Run even if laptop was asleep at scheduled time -->
+    <key>StartInterval</key>
+    <integer>0</integer>
+</dict>
+</plist>

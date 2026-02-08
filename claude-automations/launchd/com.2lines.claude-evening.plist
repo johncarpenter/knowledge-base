@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.2lines.claude-evening</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/john/Documents/Workspace/2Lines/knowledge-base/claude-automations/run-workflow.sh</string>
+        <string>evening</string>
+    </array>
+
+    <!-- Run at 5:30 PM on weekdays (Mon-Fri) -->
+    <!-- Note: launchd doesn't support day-of-week filtering directly -->
+    <!-- The workflow script could check and skip weekends if needed -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>17</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/Users/john/.local/bin</string>
+        <key>HOME</key>
+        <string>/Users/john</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/john/logs/claude-automations/launchd-evening.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/john/logs/claude-automations/launchd-evening.log</string>
+</dict>
+</plist>

@@ -1,0 +1,22 @@
+{
+  "name": "granola-mcp",
+  "version": "1.0.0",
+  "description": "Local MCP server for Granola meeting notes with API key authentication",
+  "type": "module",
+  "bin": {
+    "granola-mcp": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js serve"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.1",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.3"
+  }
+}
