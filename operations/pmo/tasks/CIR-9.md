@@ -1,26 +1,21 @@
 ---
 key: CIR-9
 project: CIR
-summary: "Add semantic layer for text, so things like potatoe roll should reference potato roll. Not sure how to do this"
+summary: "Add semantic layer for text"
 status: To Do
 priority: Medium
 assignee: Unassigned
-type: Task
 created: 2025-12-04
-updated: 2025-12-04
-due: 
+updated: 2026-02-08
 epic: CIR-13
-labels: []
 jira_url: https://2linessoftware.atlassian.net/browse/CIR-9
-synced: 2026-02-08T13:21:31-07:00
+synced: 2026-02-08T16:26:16-07:00
 ---
 
-# CIR-9: Add semantic layer for text, so things like potatoe roll should reference potato roll. Not sure how to do this
-
-## Description
+# CIR-9: Add semantic layer for text
 
 _No description provided._
 
-## Local Notes
+## Notes
 
-_Add context, decisions, blockers here._
+_Local context and decisions not tracked in Jira._

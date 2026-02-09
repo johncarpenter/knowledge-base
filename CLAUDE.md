@@ -49,6 +49,21 @@ qmd update                       # Re-index after file changes
 ### meetings (Granola MCP)
 Pulls meeting notes from Granola and saves them locally as markdown. Meeting files go in the relevant directory (e.g., `clients/Circuit/` for Circuit meetings, `operations/meetings/` for internal meetings).
 
+## Agents
+
+Worker agents are defined in `.claude/agents/` and can be invoked via the Task tool for autonomous work.
+
+| Agent | Purpose |
+|-------|---------|
+| pmo-worker | PMO coordination, Jira sync, weekly planning |
+
+Agents coordinate via:
+- **Task tools** - TaskList, TaskCreate, TaskUpdate for work items
+- **Shared state** - `operations/pmo/agent-activity.md` for visibility
+- **Local files** - PMO markdown files for persistent state
+
+See `.claude/agents/INDEX.md` for full documentation.
+
 ## When Adding Content
 
 1. Place files in the correct domain directory

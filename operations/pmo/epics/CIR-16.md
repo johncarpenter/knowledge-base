@@ -6,7 +6,7 @@ status: To Do
 priority: Low
 type: Epic
 jira_url: https://2linessoftware.atlassian.net/browse/CIR-16
-synced: 2026-02-08
+synced: 2026-02-08T16:27:14-07:00
 ---
 
 # CIR-16: User Management

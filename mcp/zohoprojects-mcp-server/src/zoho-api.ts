@@ -456,7 +456,8 @@ export class ZohoProjectsApi {
 		if (options.userId) params.set("users_list", options.userId);
 
 		const queryString = params.toString();
-		const endpoint = `/portal/${pid}/projects/${projectId}/logs${queryString ? `?${queryString}` : ""}`;
+		// V3 API uses /timelogs not /logs
+		const endpoint = `/portal/${pid}/projects/${projectId}/timelogs${queryString ? `?${queryString}` : ""}`;
 
 		// The API returns an array directly, not wrapped in { timelogs: [...] }
 		const timelogs = await this.makeRequest<ZohoTimeLog[]>(endpoint);

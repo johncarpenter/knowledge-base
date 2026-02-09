@@ -6,7 +6,7 @@ status: To Do
 priority: Medium
 type: Epic
 jira_url: https://2linessoftware.atlassian.net/browse/PAC-4
-synced: 2026-02-08
+synced: 2026-02-08T16:27:14-07:00
 ---
 
 # PAC-4: Documentation and Updates

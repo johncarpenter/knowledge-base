@@ -4,14 +4,18 @@ project: CIR
 summary: "Gather sample POS and Instacart data files from client"
 status: To Do
 priority: Medium
-type: Task
+assignee: Unassigned
+created: 2026-02-08
+updated: 2026-02-08
 epic: CIR-18
 jira_url: https://2linessoftware.atlassian.net/browse/CIR-19
-synced: 2026-02-08
+synced: 2026-02-08T16:26:16-07:00
 ---
 
 # CIR-19: Gather sample POS and Instacart data files from client
 
-## Local Notes
+Collect sample data files from the client for both POS exports and Instacart reports to understand the data formats and identify reconciliation requirements.
 
-_Add context, decisions, blockers here._
+## Notes
+
+_Local context and decisions not tracked in Jira._

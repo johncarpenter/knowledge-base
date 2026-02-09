@@ -4,14 +4,18 @@ project: JOT
 summary: "Send status email to team"
 status: To Do
 priority: Medium
-type: Task
+assignee: Unassigned
+created: 2026-02-08
+updated: 2026-02-08
 epic: JOT-10
 jira_url: https://2linessoftware.atlassian.net/browse/JOT-14
-synced: 2026-02-08
+synced: 2026-02-08T16:26:50-07:00
 ---
 
 # JOT-14: Send status email to team
 
-## Local Notes
+Send status update email to the ACS team on current progress.
 
-_Add context, decisions, blockers here._
+## Notes
+
+_Local context and decisions not tracked in Jira._
