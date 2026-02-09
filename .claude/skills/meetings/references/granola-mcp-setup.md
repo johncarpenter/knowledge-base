@@ -1,24 +1,44 @@
 # Granola MCP Setup Reference
 
-## Table of Contents
+## Current Active Configuration
 
-- Official Granola MCP
-- Community MCP Servers
-- Common Data Source
-- Troubleshooting
+**Server:** proofgeist/granola-ai-mcp-server (local cache-based)
+
+**Location:** `mcp/granola-ai-mcp-server/`
+
+**Tools available:**
+- `search_meetings(query, limit)` - Search by keyword/participant/content
+- `get_meeting_details(meeting_id)` - Meeting metadata with local timezone
+- `get_meeting_transcript(meeting_id)` - Full transcript with speaker IDs
+- `get_meeting_documents(meeting_id)` - Notes, summaries, structured content
+- `analyze_meeting_patterns(pattern_type, date_range)` - Cross-meeting analysis
+
+**Config (.mcp.json):**
+```json
+{
+  "granola": {
+    "command": "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/granola-ai-mcp-server/.venv/bin/granola-mcp-server",
+    "args": []
+  }
+}
+```
+
+**Data source:** `~/Library/Application Support/Granola/cache-v3.json`
+
+**Limitations:**
+- Only ~15 recent meetings have transcripts in local cache
+- Older meetings have metadata but transcripts are in AWS (not accessible)
+- 100% offline — no API calls
 
 ---
 
-## Official Granola MCP
+## Alternative MCP Servers
 
-Granola's official MCP connects your account to Claude, ChatGPT, or any MCP-compatible tool.
+### Official Granola MCP (Enterprise)
 
-- **Enterprise plans:** Early access beta. Admins enable in Settings > Security.
-- **Docs:** https://docs.granola.ai/help-center/sharing/integrations/mcp
-
----
-
-## Community MCP Servers
+- **Enterprise plans only** — Early access beta
+- Admins enable in Settings > Security
+- Docs: https://docs.granola.ai/help-center/sharing/integrations/mcp
 
 ### btn0s/granola-mcp (Node.js — API-based)
 
@@ -34,15 +54,13 @@ npm install && npm run build
   "mcpServers": {
     "granola": {
       "command": "node",
-      "args": ["/absolute/path/to/granola-mcp/dist/index.js"]
+      "args": ["/path/to/granola-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-Auth: Reads from `~/Library/Application Support/Granola/supabase.json`. Requires active Granola login.
-
----
+Auth: Reads from `~/Library/Application Support/Granola/supabase.json`. Requires active Granola login. **Note:** May require enterprise license.
 
 ### pedramamini/GranolaMCP (Python — cache-based, 10 tools)
 
@@ -67,26 +85,6 @@ pip install -e . && cp .env.example .env
 }
 ```
 
-Zero external dependencies. Fully offline — reads local cache only.
-
----
-
-### proofgeist/granola-ai-mcp-server (Python — cache-based)
-
-**Tools:** `search_meetings(query, limit)`, `get_meeting_details(meeting_id)`
-
-```json
-{
-  "mcpServers": {
-    "granola": {
-      "command": "/path/to/granola-ai-mcp-server/.venv/bin/granola-mcp-server"
-    }
-  }
-}
-```
-
----
-
 ### cobblehillmachine/granola-claude-mcp (Python — cache-based)
 
 **Tools:** `list_meetings(limit)`, `search_meetings(query, limit)`, `get_meeting(meeting_id)`
@@ -107,21 +105,19 @@ Zero external dependencies. Fully offline — reads local cache only.
 
 ---
 
-## Common Data Source
+## Troubleshooting
 
-Most community servers read Granola's local cache at:
-
-```
-~/Library/Application Support/Granola/cache-v3.json
-```
-
-Contains all meetings, transcripts, participants, and metadata. Updates automatically while Granola runs.
+- **MCP not responding:** Restart Claude Code to reload MCPs.
+- **Empty results:** Verify `cache-v3.json` exists and is non-empty. Open Granola to sync.
+- **No transcript:** Only recent meetings have transcripts in local cache. Older transcripts are in AWS.
+- **macOS permissions:** If installed in `~/Documents`, may need Full Disk Access for Claude.
+- **Tool names don't match:** List available tools from the MCP server first (`/mcp`), then map to the workflow.
 
 ---
 
-## Troubleshooting
+## Cache Statistics (as of 2026-02-09)
 
-- **MCP not responding:** Restart Claude Desktop (Cmd+Q, reopen).
-- **Empty results:** Verify `cache-v3.json` exists and is non-empty. Open Granola to sync.
-- **macOS permissions:** Clone repos to `~` rather than `~/Documents`.
-- **Tool names don't match:** List available tools from the MCP server first, then map to the workflow.
+- **Total documents:** 319 meetings
+- **With transcripts:** 15 meetings
+- **Date range:** 2025-07-31 to 2026-02-06
+- **Cache size:** ~12 MB

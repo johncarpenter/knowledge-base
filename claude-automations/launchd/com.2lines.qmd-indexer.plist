@@ -7,28 +7,57 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/bin/bash</string>
-        <string>-c</string>
-        <string>cd /Users/john/Documents/Workspace/2Lines/knowledge-base &amp;&amp; /Users/john/.cargo/bin/qmd update &amp;&amp; /Users/john/.cargo/bin/qmd embed</string>
+        <string>/usr/bin/open</string>
+        <string>-a</string>
+        <string>/Users/john/Documents/Workspace/2Lines/knowledge-base/claude-automations/apps/QmdIndexer.app</string>
     </array>
 
-    <!-- Run at 3:30 AM every day (before morning workflow) -->
+    <!-- Run at 5:30 AM every weekday (before morning workflow at 6:00 AM) -->
     <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>3</integer>
-        <key>Minute</key>
-        <integer>30</integer>
-    </dict>
+    <array>
+        <dict>
+            <key>Hour</key>
+            <integer>5</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+            <key>Weekday</key>
+            <integer>1</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>5</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+            <key>Weekday</key>
+            <integer>2</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>5</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+            <key>Weekday</key>
+            <integer>3</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>5</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+            <key>Weekday</key>
+            <integer>4</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>5</integer>
+            <key>Minute</key>
+            <integer>30</integer>
+            <key>Weekday</key>
+            <integer>5</integer>
+        </dict>
+    </array>
 
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/john/.cargo/bin:/Users/john/.local/bin</string>
-        <key>HOME</key>
-        <string>/Users/john</string>
-    </dict>
-
+    <!-- Log output -->
     <key>StandardOutPath</key>
     <string>/Users/john/logs/claude-automations/launchd-qmd-indexer.log</string>
     <key>StandardErrorPath</key>

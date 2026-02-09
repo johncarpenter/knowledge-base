@@ -36,12 +36,16 @@ Output saved to `operations/YYYY-MM-DD-daily-digest.md`.
 | `mcp__exchange__exchange_list_accounts` | List configured Exchange accounts |
 | `mcp__exchange__exchange_search` | Search emails with KQL syntax |
 
-### Meeting Tools (Granola)
+### Meeting Tools (Granola — Local Cache)
+
+**Note:** The proofgeist Granola MCP reads from local cache (`~/Library/Application Support/Granola/cache-v3.json`). Only ~15 recent meetings have transcripts; older meetings have metadata only.
+
 | Tool | Purpose |
 |---|---|
-| `mcp__granola__list_meetings` | List meetings within time range |
-| `mcp__granola__get_meetings` | Get detailed meeting info by ID |
-| `mcp__granola__query_granola_meetings` | Natural language query for meeting content |
+| `mcp__granola__search_meetings` | Search meetings by keyword, participant, or content |
+| `mcp__granola__get_meeting_details` | Get meeting metadata with local timezone |
+| `mcp__granola__get_meeting_documents` | Get meeting notes, summaries, structured content |
+| `mcp__granola__get_meeting_transcript` | Get full transcript with speaker IDs (recent only) |
 
 ### Calendar Tools
 | Tool | Purpose |
@@ -88,15 +92,22 @@ mcp__exchange__exchange_search(account="<name>", query="received>=YYYY-MM-DD", m
 
 #### Meetings (Previous Day)
 ```
-# Query for yesterday's meetings with focus on action items
-mcp__granola__list_meetings(time_range="custom", custom_start="YYYY-MM-DD", custom_end="YYYY-MM-DD")
+# Search for yesterday's meetings by date
+mcp__granola__search_meetings(query="YYYY-MM-DD", limit=20)
 
-# Then get details for each meeting
-mcp__granola__get_meetings(meeting_ids=["uuid1", "uuid2", ...])
+# Or search by keyword/participant
+mcp__granola__search_meetings(query="standup", limit=10)
+mcp__granola__search_meetings(query="Circuit", limit=10)
 
-# Or use natural language query
-mcp__granola__query_granola_meetings(query="action items and decisions from yesterday's meetings")
+# Then get details and documents for each meeting
+mcp__granola__get_meeting_details(meeting_id="<uuid>")
+mcp__granola__get_meeting_documents(meeting_id="<uuid>")
+
+# For recent meetings with transcripts available
+mcp__granola__get_meeting_transcript(meeting_id="<uuid>")
 ```
+
+**Limitation:** The local cache MCP doesn't support date-range filtering directly. Search by date string or filter results client-side.
 
 #### Calendar (Today + Tomorrow)
 ```
@@ -280,12 +291,18 @@ received:2026-02-05..2026-02-07
 received>=2026-02-05
 ```
 
-### Granola Date Range
+### Granola Meeting Search
 ```
-time_range="custom"
-custom_start="2026-02-06"
-custom_end="2026-02-06"
+# Search by date (returns meetings containing that date in title/content)
+mcp__granola__search_meetings(query="2026-02-06", limit=20)
+
+# Search by keyword
+mcp__granola__search_meetings(query="standup", limit=10)
+
+# Filter results by date in your code after retrieval
 ```
+
+**Note:** The proofgeist MCP doesn't support native date-range filtering. Search broadly and filter results by checking meeting dates in the response.
 
 ## Tips
 
@@ -302,8 +319,17 @@ custom_end="2026-02-06"
 - Weekly plan missing/empty → Show "No weekly plan set. Run `/weekly-plan` to prioritize your Epics."
 - MCP not connected → Skip that section, note in output
 - No meetings found → State "No meetings recorded for [date]"
+- No transcript available → Note "Transcript not in local cache (older meeting)"
 - No emails found → State "No new emails in the past 2 days"
 - Calendar empty → State "No scheduled events"
+
+### Granola Local Cache Limitations
+
+The proofgeist Granola MCP reads from local cache only:
+- **All meeting metadata** is available (~300+ meetings)
+- **Only ~15 recent meetings** have transcripts cached
+- Older transcripts are stored in AWS and not accessible via this MCP
+- For older meetings, use `get_meeting_documents` instead of `get_meeting_transcript`
 
 ## Optional Enhancements
 

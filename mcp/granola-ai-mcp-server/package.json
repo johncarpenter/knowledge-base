@@ -1,0 +1,21 @@
+{
+  "name": "granola-mcp-server",
+  "version": "0.0.0-development",
+  "description": "MCP server for Granola.ai meeting intelligence",
+  "private": true,
+  "engines": {
+    "node": ">=24.10.0"
+  },
+  "devDependencies": {
+    "semantic-release": "^25.0.2"
+  },
+  "overrides": {
+    "glob": ">=11.1.0"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  }
+}
+

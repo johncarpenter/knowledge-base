@@ -7,36 +7,60 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/john/Documents/Workspace/2Lines/knowledge-base/claude-automations/run-workflow.sh</string>
-        <string>morning</string>
+        <string>/usr/bin/open</string>
+        <string>-a</string>
+        <string>/Users/john/Documents/Workspace/2Lines/knowledge-base/claude-automations/apps/MorningWorkflow.app</string>
     </array>
 
-    <!-- Run at 4:00 AM every day -->
+    <!-- Run at 6:00 AM every weekday (Mon-Fri) -->
     <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>4</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
-
-    <!-- Environment variables Claude might need -->
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/john/.local/bin</string>
-        <key>HOME</key>
-        <string>/Users/john</string>
-    </dict>
+    <array>
+        <dict>
+            <key>Hour</key>
+            <integer>6</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+            <key>Weekday</key>
+            <integer>1</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>6</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+            <key>Weekday</key>
+            <integer>2</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>6</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+            <key>Weekday</key>
+            <integer>3</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>6</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+            <key>Weekday</key>
+            <integer>4</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>6</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+            <key>Weekday</key>
+            <integer>5</integer>
+        </dict>
+    </array>
 
     <!-- Log output -->
     <key>StandardOutPath</key>
     <string>/Users/john/logs/claude-automations/launchd-morning.log</string>
     <key>StandardErrorPath</key>
     <string>/Users/john/logs/claude-automations/launchd-morning.log</string>
-
-    <!-- Run even if laptop was asleep at scheduled time -->
-    <key>StartInterval</key>
-    <integer>0</integer>
 </dict>
 </plist>

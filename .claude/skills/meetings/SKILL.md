@@ -2,10 +2,10 @@
 name: meetings
 description: >
   Query, retrieve, and save Granola meeting notes and summaries locally using the
-  Granola MCP server. Use this skill whenever the user wants to: search or find past
-  meetings, get meeting summaries or transcripts, copy meeting notes to local markdown
-  files, review what was discussed in a meeting, look up action items or decisions from
-  meetings, export meeting data, or analyze meeting patterns.
+  proofgeist Granola MCP server (local cache-based). Use this skill whenever the user wants to:
+  search or find past meetings, get meeting summaries or transcripts, copy meeting notes to
+  local markdown files, review what was discussed in a meeting, look up action items or decisions
+  from meetings, export meeting data, or analyze meeting patterns.
   Triggers: "meeting notes", "meeting summary", "what was discussed", "find the meeting",
   "copy meeting notes", "export meeting", "meeting transcript", "action items from meeting",
   "last meeting", "recent meetings", "meeting with [person]", "granola".
@@ -13,37 +13,37 @@ description: >
 
 # Meetings — Granola MCP Integration
 
-Query, retrieve, and save Granola meeting notes locally via the Granola MCP server. Assumes the Granola MCP server is configured and connected.
+Query, retrieve, and save Granola meeting notes locally via the proofgeist Granola MCP server. This server reads from Granola's local cache file — no API connection required.
+
+## Important: Local Cache Limitations
+
+The proofgeist MCP reads from `~/Library/Application Support/Granola/cache-v3.json`:
+- **All meeting metadata** is available (~300+ meetings)
+- **Only ~15 recent meetings** have transcripts cached locally
+- Older transcripts are stored in AWS and not accessible via this MCP
 
 ## Available MCP Tools
 
-The Granola MCP exposes these tools (exact names vary by server implementation):
+The Granola MCP (`mcp__granola__*`) exposes these tools:
 
-| Tool | Purpose |
-|---|---|
-| `search_meetings` / `search_granola_notes` | Find meetings by keyword, participant, or date |
-| `list_meetings` / `list_granola_documents` | List recent meetings |
-| `get_meeting` / `get_granola_document` | Full meeting details by ID |
-| `get_transcript` / `get_granola_transcript` | Full transcript with speaker attribution |
-| `get_meeting_notes` | AI-generated summary and human notes |
-| `export_meeting` | Export meeting as formatted markdown |
-| `get_recent_meetings` | Get the N most recent meetings |
-| `search_granola_events` | Search calendar events |
-| `search_granola_panels` | Search structured note sections |
-
-> **Tip:** If a tool name isn't recognized, list available tools from the MCP server and map to the closest match above.
+| Tool | Purpose | Parameters |
+|------|---------|------------|
+| `search_meetings` | Search meetings by keyword, participant, or content | `query` (string), `limit` (int, default 10) |
+| `get_meeting_details` | Get comprehensive meeting metadata | `meeting_id` (string) |
+| `get_meeting_transcript` | Get full transcript with speaker identification | `meeting_id` (string) |
+| `get_meeting_documents` | Get meeting notes, summaries, and structured content | `meeting_id` (string) |
+| `analyze_meeting_patterns` | Analyze patterns across meetings | `pattern_type` ('topics'/'participants'/'frequency'), `date_range` (optional) |
 
 ## Workflows
 
 ### 1. Find a Meeting
 
-Search or list to locate the target meeting:
+Search to locate the target meeting:
 
 ```
-search_meetings(query="quarterly planning", limit=10)
-list_meetings(limit=5)
-get_recent_meetings(count=5)
-list_meetings(from_date="2026-01-01", to_date="2026-01-31")
+mcp__granola__search_meetings(query="quarterly planning", limit=10)
+mcp__granola__search_meetings(query="Circuit", limit=5)
+mcp__granola__search_meetings(query="John", limit=10)
 ```
 
 Present results as a concise list (title, date, attendees). Confirm with the user if ambiguous.
@@ -53,9 +53,9 @@ Present results as a concise list (title, date, attendees). Confirm with the use
 With a `meeting_id`, pull the content:
 
 ```
-get_meeting(meeting_id="<uuid>")
-get_meeting_notes(meeting_id="<uuid>")
-get_transcript(meeting_id="<uuid>")
+mcp__granola__get_meeting_details(meeting_id="<uuid>")
+mcp__granola__get_meeting_documents(meeting_id="<uuid>")
+mcp__granola__get_meeting_transcript(meeting_id="<uuid>")
 ```
 
 ### 3. Save Meeting Summary Locally
@@ -71,7 +71,7 @@ The key deliverable — copy meeting content to a local `.md` file.
 **Attendees:** Name1, Name2, Name3
 
 ## Summary
-[AI-generated summary]
+[AI-generated summary from meeting documents]
 
 ## Key Decisions
 - [Decisions extracted from notes]
@@ -88,26 +88,52 @@ The key deliverable — copy meeting content to a local `.md` file.
 
 **Filename convention:** `YYYY-MM-DD-meeting-title-slug.md`
 
-Save to the user's workspace or a designated `meetings/` subdirectory.
+**Save locations:**
+- Client meetings: `clients/<ClientName>/meetings/`
+- Internal meetings: `operations/meetings/`
 
-### 4. Batch Export
+### 4. Analyze Meeting Patterns
+
+Use the pattern analysis tool for insights:
+
+```
+mcp__granola__analyze_meeting_patterns(pattern_type="participants")
+mcp__granola__analyze_meeting_patterns(pattern_type="topics", date_range={"start_date": "2026-01-01", "end_date": "2026-01-31"})
+mcp__granola__analyze_meeting_patterns(pattern_type="frequency")
+```
+
+### 5. Batch Export
 
 For multiple meetings:
 
-1. `list_meetings` or `search_meetings` to get the set
+1. `search_meetings` to get the set
 2. Iterate through each `meeting_id`
-3. Retrieve and format each
-4. Save all to a `meetings/` subdirectory
+3. Retrieve details and documents for each
+4. Save all to appropriate subdirectory
 
 ## Tips
 
-- **Date shortcuts:** Some servers accept relative dates (`"3d"`, `"1w"`, `"24h"`).
-- **Transcript size:** Only include transcripts when explicitly requested.
-- **Speaker labels:** Preserve speaker attribution from transcripts in output.
-- **Deduplication:** Deduplicate by `meeting_id` when combining search results.
+- **Transcript availability:** Only ~15 recent meetings have transcripts in local cache. Older meetings will have metadata but no transcript.
+- **Speaker labels:** Transcripts include speaker identification — preserve this in output.
+- **Documents vs Transcript:** Use `get_meeting_documents` for notes/summaries, `get_meeting_transcript` for the full conversation.
+- **Timezone:** All timestamps display in local timezone automatically.
 
 ## Error Handling
 
-- Tool name not found → list available MCP tools, try alternate names from the table above.
-- No results → broaden query or expand date range.
-- MCP not connected → see [references/granola-mcp-setup.md](references/granola-mcp-setup.md) for setup instructions.
+- **No transcript available:** Meeting may be older than the cache window. Note this to the user.
+- **Empty results:** Broaden the search query.
+- **MCP not connected:** Restart Claude Code to reload MCPs. Check `.mcp.json` config.
+
+## Current Configuration
+
+Server installed at: `mcp/granola-ai-mcp-server/`
+Config in: `.mcp.json`
+
+```json
+{
+  "granola": {
+    "command": "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/granola-ai-mcp-server/.venv/bin/granola-mcp-server",
+    "args": []
+  }
+}
+```
