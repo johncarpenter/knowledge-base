@@ -6,7 +6,7 @@ status: To Do
 priority: Medium
 type: Epic
 jira_url: https://2linessoftware.atlassian.net/browse/ZANE-3
-synced: 2026-02-08T16:27:14-07:00
+synced: 2026-02-09T17:00:00-07:00
 ---
 
 # ZANE-3: Operations & Compliance

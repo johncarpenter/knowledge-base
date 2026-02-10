@@ -2,19 +2,21 @@
 name: daily-digest
 description: >
   Generate a comprehensive daily digest combining weekly plan (Epic focus and tasks),
-  emails (last 2 days), meeting notes (previous day's action items, decisions, summaries),
-  and upcoming calendar events (today and tomorrow). Saves to operations/ folder as markdown.
-  Use this skill to start the day with a complete overview or to catch up after time away.
+  emails (last 2 days), Slack messages (today), meeting notes (previous day's action items,
+  decisions, summaries), and upcoming calendar events (today and tomorrow). Saves to
+  operations/ folder as markdown. Use this skill to start the day with a complete overview
+  or to catch up after time away.
   Triggers: "daily digest", "morning briefing", "daily summary", "catch me up",
   "what do I need to know", "daily overview", "morning summary", "start my day",
   "briefing", "what's happening today".
 ---
 
-# Daily Digest — Email, Meetings, Calendar & Weekly Plan Integration
+# Daily Digest — Email, Slack, Meetings, Calendar & Weekly Plan Integration
 
 Generate a comprehensive daily digest combining:
 - **Weekly Plan** — current Epic focus and tasks from `operations/pmo/weekly-plan.md`
 - **Emails** (last 2 days) — categorized by action type
+- **Slack** (today) — key messages and action items from channels
 - **Meetings** (previous day) — action items, decisions, and summaries
 - **Calendar** (today + tomorrow) — upcoming events
 
@@ -35,6 +37,14 @@ Output saved to `operations/YYYY-MM-DD-daily-digest.md`.
 |---|---|
 | `mcp__exchange__exchange_list_accounts` | List configured Exchange accounts |
 | `mcp__exchange__exchange_search` | Search emails with KQL syntax |
+
+### Slack Tools
+
+| Tool | Purpose |
+|---|---|
+| `mcp__slack__conversations_search_messages` | Search messages with date/channel/user filters |
+| `mcp__slack__channels_list` | List available channels |
+| `mcp__slack__conversations_history` | Get recent messages from a specific channel |
 
 ### Meeting Tools (Granola — Local Cache)
 
@@ -90,6 +100,20 @@ mcp__gmail__gmail_search(account="<name>", query="newer_than:2d", max_results=50
 mcp__exchange__exchange_search(account="<name>", query="received>=YYYY-MM-DD", max_results=50, include_body=true)
 ```
 
+#### Slack (Today)
+```
+# Search for today's messages across all channels
+mcp__slack__conversations_search_messages(filter_date_on="Today", limit=50)
+
+# Or filter by specific channel
+mcp__slack__conversations_search_messages(filter_date_on="Today", filter_in_channel="#general", limit=50)
+
+# Filter out automated/bot messages when processing results
+# (e.g., ClickUp, Jira, GitHub integrations)
+```
+
+**Note:** Filter results to exclude high-volume bot notifications (ClickUp, GitHub, etc.) when summarizing. Focus on human messages.
+
 #### Meetings (Previous Day)
 ```
 # Search for yesterday's meetings by date
@@ -126,6 +150,16 @@ mcp__calendar__calendar_tomorrow(include_details=true)
 
 Focus on emails from the **current day** for actions, but include previous day for context.
 
+#### Slack Message Processing
+| Category | Criteria |
+|---|---|
+| **Action Items** | Direct requests, tasks assigned to you, urgent items |
+| **Mentions** | Messages where you were @mentioned |
+| **Key Discussions** | Important conversations in project channels |
+| **Skip** | Bot messages (ClickUp, GitHub, Jira), automated notifications |
+
+Group messages by channel and highlight threads that need your response.
+
 #### Meeting Extraction
 For each meeting, extract:
 - **Summary** — 2-3 sentence overview
@@ -153,7 +187,7 @@ For each event, note:
 
 **Generated:** YYYY-MM-DD HH:MM
 **Week:** W06 (Feb 3-9, 2026)
-**Coverage:** Weekly plan, emails (2 days), meetings (yesterday), calendar (today + tomorrow)
+**Coverage:** Weekly plan, emails (2 days), Slack (today), meetings (yesterday), calendar (today + tomorrow)
 
 ---
 
@@ -197,6 +231,32 @@ For each event, note:
 | Time | Event | Location | Notes |
 |------|-------|----------|-------|
 | 10:00 AM | Planning Session | Conference Room | Bring laptop |
+
+---
+
+## Slack Highlights (Today)
+
+### Action Items
+
+| Channel | From | Message | Time |
+|---------|------|---------|------|
+| #zane-product | @alexey | Review ZANE-127 contract/field names | 1:44 PM |
+| #daily | @bryce | URGENT: Dan prioritization re: modules | 4:18 PM |
+
+### Key Discussions
+
+**#zane-product**
+- MVP philosophy discussion (Bryce): build fast, reworks expected at this stage
+- Transactions module backend changes ready for review
+
+**#yodlee (DM)**
+- Staging credentials working, production credentials issue under investigation
+
+### Awaiting Your Response
+
+| Channel | Thread | From | Question |
+|---------|--------|------|----------|
+| #zane-product | ZANE-127 | @alexey | Need contract confirmation for frontend |
 
 ---
 
@@ -261,6 +321,8 @@ Synthesize from weekly plan, meetings, and emails:
 - **Action items from meetings:** N
 - **Emails received (2 days):** N
 - **Requiring action:** N
+- **Slack messages (today):** N (excluding bots)
+- **Slack threads awaiting response:** N
 - **Calendar events today:** N
 - **Calendar events tomorrow:** N
 ```
@@ -321,6 +383,8 @@ mcp__granola__search_meetings(query="standup", limit=10)
 - No meetings found → State "No meetings recorded for [date]"
 - No transcript available → Note "Transcript not in local cache (older meeting)"
 - No emails found → State "No new emails in the past 2 days"
+- Slack MCP not connected → Skip section, note in output
+- No Slack messages → State "No Slack messages today"
 - Calendar empty → State "No scheduled events"
 
 ### Granola Local Cache Limitations
