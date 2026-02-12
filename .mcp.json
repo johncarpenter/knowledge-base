@@ -1,12 +1,20 @@
 {
     "mcpServers": {
         "granola": {
-            "command": "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/granola-ai-mcp-server/.venv/bin/granola-mcp-server",
-            "args": []
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/Users/john/Documents/Workspace/2Lines/knowledge-base/mcp/granola-ai-mcp-server",
+                "run",
+                "granola-mcp-server"
+            ],
+            "env": {}
         },
         "jira": {
             "command": "uvx",
-            "args": ["mcp-atlassian"],
+            "args": [
+                "mcp-atlassian"
+            ],
             "env": {
                 "JIRA_URL": "${JIRA_URL}",
                 "JIRA_USERNAME": "${JIRA_USERNAME}",

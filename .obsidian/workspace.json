@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "research/projects/circuit/cir-18-reconciliation-research.md",
+                "file": "_templates/INDEX.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "cir-18-reconciliation-research"
+              "title": "INDEX"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 250
+    "width": 440.5
   },
   "right": {
     "id": "right",
@@ -169,43 +169,50 @@
       "bases:Create new base": false
     }
   },
-  "active": "ed9b70f335e7fb87",
+  "active": "file-explorer",
   "lastOpenFiles": [
-    "operations/2026-02-09-1ami2/9/20262026-not1.md",
-    "claude-automations/apps/QmdIndexer.app/Contents/_CodeSignature/CodeResources",
-    "claude-automations/apps/QmdIndexer.app/Contents/_CodeSignature",
-    "claude-automations/apps/QmdIndexer.app/Contents/Resources/Scripts/main.scpt",
-    "claude-automations/apps/QmdIndexer.app/Contents/Resources/applet.rsrc",
-    "claude-automations/apps/QmdIndexer.app/Contents/Resources/applet.icns",
-    "claude-automations/apps/QmdIndexer.app/Contents/Resources/Scripts",
-    "claude-automations/apps/QmdIndexer.app/Contents/Resources/Assets.car",
-    "claude-automations/apps/QmdIndexer.app/Contents/MacOS/applet",
-    "claude-automations/apps/QmdIndexer.app/Contents/Resources",
-    "claude-automations/apps/QmdIndexer.app/Contents/PkgInfo",
-    "operations/2026-02-09-1ami2/9/20262026-1ig18t.md",
-    "operations/2026-02-09-1ami2/9/20262026-1ig17t.md",
-    "operations/2026-02-09-1ami2/9/20262026-1ig16t.md",
-    "operations/2026-02-09-1ami2/9/20262026-1ig12t.md",
-    "operations/2026-02-09-1ami2/9/20262026-1ig121t.md",
-    "Untitled.canvas",
-    "operations/2026-02-09-1ami2/9/20262026-1ig118t.md",
-    "operations/2026-02-09-1ami2/9/20262026-1ig117t.md",
-    "operations/2026-02-09-daily-digest.md",
-    "operations/2026-02-09-1ami2/9/20262026-1ig139t.md",
-    "operations/meetings/2026-02-09.md",
-    "operations/2026-02-08-daily-digest.md",
-    "mcp/granola-ai-mcp-server/README.md",
-    "mcp/granola-ai-mcp-server/INSTALL.md",
-    "research/projects/circuit/cir-18-reconciliation-research.md",
-    "research/projects/circuit/reconcilliation_background.md",
-    "operations/pmo/agent-activity.md",
-    "operations/meetings/2026-02-08.md",
-    "operations/emails/2026-02-06-email-summary.md",
-    "operations/pmo/clients/pacwest.md",
-    "operations/pmo/INDEX.md",
-    "operations/pmo/epics/JOT-11.md",
-    "operations/pmo/tasks/ZANE-6.md",
-    "operations/pmo/tasks/ZANE-5.md",
-    "operations/pmo/tasks/ZANE-4.md"
+    "output",
+    "pipeline/abinnovates_rfp/PROPOSAL-DRAFT/style.css",
+    "pipeline/abinnovates_rfp/PROPOSAL-DRAFT/logo.svg",
+    "pipeline/abinnovates_rfp/PROPOSAL-DRAFT/index.html",
+    "pipeline/abinnovates_rfp/PROPOSAL-DRAFT",
+    "pipeline/abinnovates_rfp/TASKS.pdf",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025.pdf",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025/style.css",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025/logo.svg",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025/index.html",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025.html",
+    "_templates/2lines-external/base.html",
+    "_templates/2lines-external/README.md",
+    "_templates/2lines-external/logo.svg",
+    "_templates/2lines-external/example.md",
+    "operations/pmo/weekly-plan.md",
+    "_templates/INDEX.md",
+    "clients/JOT/Suncorp/2026-02-12-cost-report.md",
+    "clients/JOT/Suncorp/Suncorp Weekly Summary of Meetings.md",
+    "CLAUDE.md",
+    "mcp/cloud-doctor-mcp/README.md",
+    "mcp/suncorp/cloud-doctor-mcp/README.md",
+    "operations/2026-02-12-daily-digest.md",
+    "operations/2026-02-11-daily-digest.md",
+    "operations/meetings/2026-02-11-john-liam-intro-call.md",
+    "clients/Zane/meetings/2026-02-11-zane-pm-weekly.md",
+    "clients/Zane/meetings/2026-02-11-development-environment-setup.md",
+    "operations/meetings/2026-02-11-zane-chat.md",
+    "pipeline/abinnovates_rfp/PROPOSAL-DRAFT.md",
+    "clients/JOT/Suncorp/suncorp-valuations-tech-strategy-2025.md",
+    "clients/JOT/Suncorp/Technology Strategy Meeting Feb 11 - Raw Transcription.md",
+    "operations/2026-02-11-3ami2/11/20262026-not3.md",
+    "operations/emails/2026-02-10-email-summary.md",
+    "clients/Circuit/2026-02-05-third-party-marketplace-delivery-reconciliation.md",
+    "marketing/use-cases/zane-money-fractional-cto.md",
+    "marketing/use-cases/suncorp-fractional-cto.md",
+    "marketing/use-cases/jot-digital-partnership.md",
+    "marketing/use-cases/discontinuity-bridge-platform.md",
+    "mcp/slack-mcp-server/images/icon.png",
+    "mcp/slack-mcp-server/images/feature-2.gif",
+    "mcp/slack-mcp-server/images/feature-1.gif",
+    "Untitled.canvas"
   ]
 }

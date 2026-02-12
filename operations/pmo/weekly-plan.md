@@ -28,8 +28,9 @@ Use `/weekly-plan` to generate a new weekly plan.
 - [ ] CIR-20: Research reconciliation matching approaches
 
 **Pacwest (PAC-2)**
-- [ ] PAC-16: Complete Balance Sheets page
-- [ ] PAC-17: Complete P&L Statements page
+- [x] PAC-16: Complete Balance Sheets page
+- [x] PAC-17: Complete P&L Statements page
+- [ ] PAC-21: Build A&R Reports page
 
 **JOT**
 - [ ] JOT-13: Develop container and test on device (ACS)

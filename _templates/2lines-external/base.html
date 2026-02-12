@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title | default("Report — 2Lines Software") }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =================================================================
+       COVER PAGE
+       ================================================================= -->
+  <section class="cover">
+    <div class="cover-header">
+      <img class="cover-logo" src="logo.svg" alt="2Lines Software" width="48" height="48">
+      <span class="cover-company">2Lines Software Corporation</span>
+    </div>
+
+    <div class="cover-body">
+      <hr class="cover-rule">
+      <h1 class="cover-title">{{ title | default("Report Title") }}</h1>
+      {% if subtitle %}
+      <p class="cover-subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </div>
+
+    <div class="cover-spacer"></div>
+
+    <dl class="cover-meta">
+      {% if client %}
+      <dt>Prepared for</dt>
+      <dd>{{ client }}</dd>
+      {% endif %}
+
+      <dt>Prepared by</dt>
+      <dd>{{ author | default("John Carpenter, 2Lines Software") }}</dd>
+
+      <dt>Date</dt>
+      <dd>{{ date | default("February 2026") }}</dd>
+
+      {% if version %}
+      <dt>Version</dt>
+      <dd>{{ version }}</dd>
+      {% endif %}
+    </dl>
+
+    <footer class="cover-footer">
+      <div class="cover-footer-row">
+        <span>&copy; {{ year | default("2026") }} 2Lines Software Corporation. All rights reserved.</span>
+        <span>{{ classification | default("Confidential") }}</span>
+      </div>
+    </footer>
+  </section>
+
+  <!-- =================================================================
+       TABLE OF CONTENTS
+       ================================================================= -->
+  {% if toc %}
+  <section class="toc">
+    <div class="page-header">
+      <div class="page-header-left">
+        <img class="page-header-logo" src="logo.svg" alt="2Lines" width="32" height="32">
+        <span class="page-header-company">2Lines Software</span>
+      </div>
+      <span class="page-header-title">{{ title | default("Report Title") }}</span>
+    </div>
+
+    <h2>Table of Contents</h2>
+    {{ toc | safe }}
+  </section>
+  {% endif %}
+
+  <!-- =================================================================
+       REPORT BODY — Content from markdown is injected here
+       ================================================================= -->
+  <main class="report-body">
+
+    <!-- Running page header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <img class="page-header-logo" src="logo.svg" alt="2Lines" width="32" height="32">
+        <span class="page-header-company">2Lines Software</span>
+      </div>
+      <span class="page-header-title">{{ title | default("Report Title") }}</span>
+    </div>
+
+    <!-- Markdown content injected here -->
+    <div class="content">
+      {{ content | safe }}
+    </div>
+
+    <!-- Page footer (HTML-only; @page handles this in PDF) -->
+    <footer class="page-footer no-print">
+      <span>&copy; {{ year | default("2026") }} 2Lines Software Corporation</span>
+      <span>{{ classification | default("Confidential") }}</span>
+    </footer>
+
+  </main>
+
+</body>
+</html>

@@ -8,6 +8,7 @@ This directory contains agent references and project-specific overrides. Global 
 |-------|----------|---------|-------|-----------|
 | pmo-worker | Global | PMO coordination, Jira sync, planning | sonnet | Yes |
 | research-worker | Global | Technical research, feasibility analysis, buy-vs-build | opus | Yes |
+| suncorp-worker | Project | Suncorp FinOps, KPI, cloud-doctor MCP | haiku | No |
 
 ## Global vs Project Agents
 

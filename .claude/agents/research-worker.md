@@ -1,3 +1,7 @@
+---
+name: research-worker
+---
+
 # research-worker (Project Reference)
 
 The `research-worker` agent is defined globally at `~/.claude/agents/research-worker.md`.

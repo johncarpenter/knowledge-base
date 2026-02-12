@@ -15,6 +15,13 @@ LOG_DIR="${HOME}/logs/claude-automations"
 CLAUDE_BIN="${CLAUDE_BIN:-/opt/homebrew/bin/claude}"
 KNOWLEDGE_BASE="${HOME}/Documents/Workspace/2Lines/knowledge-base"
 
+# Load environment variables required by MCP servers
+# (Jira, Slack, etc. need API tokens from .env)
+if [[ -f "$KNOWLEDGE_BASE/.env" ]]; then
+    # shellcheck source=/dev/null
+    source "$KNOWLEDGE_BASE/.env"
+fi
+
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
 
@@ -87,8 +94,22 @@ workflow_morning() {
 workflow_evening() {
     log "=== Starting Evening Workflow ==="
 
-    # Step 1: Create timesheet entries from today's calendar
+    # Step 1: Backup today's Granola meeting notes to local markdown
+    run_claude_in "$KNOWLEDGE_BASE" "meeting-backup" "/meeting-backup"
+
+    # Step 2: Summarize today's emails
+    run_claude_in "$KNOWLEDGE_BASE" "email-summary" "/email-summary"
+
+    # Step 3: Create timesheet entries from today's calendar
     run_claude_in "$KNOWLEDGE_BASE" "timesheet" "/time-entry-from-calendar"
+
+    # Step 4: Re-index knowledge base with new content
+    log "Starting: qmd-reindex"
+    if (cd "$KNOWLEDGE_BASE" && qmd update && qmd embed); then
+        log "Completed: qmd-reindex"
+    else
+        log "FAILED: qmd-reindex"
+    fi
 
     log "=== Evening Workflow Complete ==="
 }
@@ -121,7 +142,7 @@ Usage: $(basename "$0") <workflow>
 
 Available workflows:
     morning     Daily digest (emails, meetings, calendar)
-    evening     Create timesheet entries from calendar
+    evening     Backup meetings, email summary, timesheet, re-index KB
     weekly      Weekly summary and tasks
     test        Verify automation is working
 

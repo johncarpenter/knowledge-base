@@ -88,14 +88,14 @@ claude-automations/
 | 3:30 AM | `qmd-indexer` | Re-indexes knowledge base (`qmd update && qmd embed`) |
 | 4:00 AM | `claude-morning` | Runs `/daily-digest` workflow |
 | 7:00 PM | `granola-reminder` | macOS notification to check Granola auth |
-| 8:00 PM | `claude-evening` | Runs `/time-entry-from-calendar` workflow |
+| 8:00 PM | `claude-evening` | Backs up meetings, summarizes emails, creates timesheet entries, re-indexes KB |
 
 ## Workflows
 
 | Workflow | Schedule | What it does |
 |----------|----------|--------------|
 | `morning` | 4:00 AM daily | Runs `/daily-digest` |
-| `evening` | 8:00 PM daily | Runs `/time-entry-from-calendar` |
+| `evening` | 8:00 PM daily | `/meeting-backup`, `/email-summary`, `/time-entry-from-calendar`, `qmd update && qmd embed` |
 | `weekly` | (not scheduled) | Placeholder for weekly tasks |
 | `test` | Manual only | Verifies automation works |
 
